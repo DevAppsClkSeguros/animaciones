@@ -1,59 +1,99 @@
-# Busquedas
+# Razas de perros
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.6.
+Prueba técnica sencilla con Angular 19, The Dog API y CSS puro. Sin NgRx ni librerías de interfaz.
 
-## Development server
-
-To start a local development server, run:
+## Ejecutar
 
 ```bash
-ng serve
+npm install
+npm start
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Abre `http://localhost:4200`.
 
-## Code scaffolding
+**Configura primero tu API key:** al verificar el endpoint, The Dog API respondió `403: Authentication required`. Obtén tu propia clave en [thedogapi.com](https://thedogapi.com/) y colócala en `dogApiKey` dentro de:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- `src/environments/environment.development.ts` para `npm start`.
+- `src/environments/environment.ts` para el build de producción.
+
+El servicio envía la clave mediante el header `x-api-key`. No se incluye una clave real en el repositorio. Si no está configurada o es inválida, la aplicación muestra un mensaje y permite reintentar.
 
 ```bash
-ng generate component component-name
+npm run build
+npm test -- --watch=false --browsers=ChromeHeadless
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Las pruebas usan Jasmine/Karma y respuestas HTTP simuladas: no necesitan una API key ni conexión con The Dog API. Debes tener Chrome instalado.
 
-```bash
-ng generate --help
+## Archivos
+
+```text
+src/
+  main.ts                       # Bootstrap de AppModule
+  styles.css                    # Estilos compartidos
+  environments/
+    environment.ts              # Producción: URL, API key y clave AES
+    environment.development.ts  # Desarrollo: reemplazado desde angular.json
+  app/
+    app.module.ts               # Módulo básico: componentes, router, forms y HTTP
+    app.routes.ts               # /, /breeds, /breeds/:id
+    app.component.{ts,html,css}  # Navegación y router-outlet
+    models/
+      breed.ts                  # Interfaces Breed y BreedImage
+    services/
+      dog.service.ts            # API con Observable y Promise
+      favorite.service.ts       # localStorage con AES
+    components/
+      home/home.component.{ts,html,css}
+      breed-list/breed-list.component.{ts,html,css}
+      breed-detail/breed-detail.component.{ts,html,css}
 ```
 
-## Building
+Hay archivos `.spec.ts` para los componentes y servicios.
 
-To build the project run:
+## Uso
 
-```bash
-ng build
-```
+1. Entra a **Ver razas** y busca por nombre.
+2. Pulsa **Ver detalle** para consultar una raza.
+3. Pulsa **Guardar como favorita**. Se guarda una sola favorita; otra selección reemplaza la anterior.
+4. Vuelve a **Inicio** para verla o quitarla. Se conserva al recargar el navegador.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Los nombres y características se muestran en el idioma que entrega la API. Si falta una imagen o un dato, el resto de la pantalla sigue funcionando.
 
-## Running unit tests
+## Checklist de la prueba
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+| Requisito | Dónde verlo |
+| --- | --- |
+| Tres componentes navegables y arquitectura modular | `AppModule`, `app.routes.ts`, carpeta `components/` |
+| Interfaz TypeScript | `models/breed.ts` |
+| Servicio HTTP | `DogService` con `HttpClient` |
+| Observable y operador RxJS | `DogService.getBreeds()`, con `map` para ordenar |
+| Promise | `DogService.getBreed()`, con `firstValueFrom` y `async/await` |
+| `.subscribe()` explícito en componente | `BreedListComponent.loadBreeds()` |
+| Array y objeto | `Breed[]` en la lista y `Breed` en el detalle |
+| `*ngIf` y `*ngFor` explícitos | Plantillas de componentes; `*ngFor` en la lista |
+| Evento `(click)` | Botones de detalle, favorito y reintentar |
+| Callback como parámetro | `saveFavorite(breed, onSaved)` y su llamada desde el detalle |
+| Persistencia y cifrado simétrico | `FavoriteService`: `CryptoJS.AES.encrypt/decrypt` antes de escribir/al leer |
+| CSS responsivo, hover y animación | Grid en lista, Flexbox en detalle, `.breed-card:hover` y `@keyframes fade-in` |
+| Entornos configurados y utilizados | `src/environments/`, `angular.json` y los servicios |
+| Prueba de creación Jasmine/Karma | `home.component.spec.ts`, entre otras |
 
-```bash
-ng test
-```
+## Integrarlo en otro proyecto CLI
 
-## Running end-to-end tests
+Esta versión usa un `AppModule` tradicional (no componentes standalone). En un proyecto Angular 19 equivalente:
 
-For end-to-end (e2e) testing, run:
+1. Copia `src/app/`, `src/environments/`, `src/main.ts` y `src/styles.css`.
+2. Instala las dependencias adicionales:
 
-```bash
-ng e2e
-```
+   ```bash
+   npm install crypto-js
+   npm install --save-dev @types/crypto-js
+   ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+3. Copia `fileReplacements` de la configuración `development` y `allowedCommonJsDependencies` de las opciones de build desde `angular.json`.
+4. Configura tu API key y conserva el builder Jasmine/Karma para ejecutar los `.spec.ts`.
 
-## Additional Resources
+## Nota sobre seguridad
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+El cifrado AES cumple la rúbrica, pero **una clave incluida en el frontend no es secreta**. No uses este patrón para contraseñas o información sensible. La API key también puede verse en el navegador; para ocultarla necesitarías un backend. `crypto-js` se utiliza porque lo exige el ejercicio, aunque su mantenimiento está discontinuado.

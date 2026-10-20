@@ -1,0 +1,23 @@
+<section class="welcome">
+  <h1>Conoce las razas de perros</h1>
+  <p>Busca una raza, consulta sus características y guarda tu favorita.</p>
+  <a class="button" routerLink="/breeds">Ver todas las razas</a>
+</section>
+
+<section class="favorite">
+  <h2>Mi raza favorita</h2>
+
+  <div *ngIf="favorite as breed; else noFavorite">
+    <h3>{{ breed.name }}</h3>
+    <p>{{ breed.temperament || 'Sin descripción disponible.' }}</p>
+    <div class="actions">
+      <a class="button" [routerLink]="['/breeds', breed.id]">Ver detalle</a>
+      <button type="button" class="secondary" (click)="removeFavorite()">Quitar favorito</button>
+    </div>
+  </div>
+
+  <ng-template #noFavorite>
+    <p>Aún no has guardado una raza favorita. Puedes hacerlo desde su detalle.</p>
+  </ng-template>
+  <p *ngIf="error" class="error" role="alert">{{ error }}</p>
+</section>

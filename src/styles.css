@@ -1,1 +1,71 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f5f6f8;
+  color: #24344a;
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.container {
+  width: min(100% - 32px, 1040px);
+  margin: 0 auto;
+}
+
+a {
+  color: #245ac2;
+}
+
+button, input {
+  font: inherit;
+}
+
+button, .button {
+  display: inline-block;
+  padding: 10px 16px;
+  border: 1px solid #245ac2;
+  border-radius: 5px;
+  background: #245ac2;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+button:hover, .button:hover {
+  background: #194695;
+}
+
+button:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.secondary {
+  background: #fff;
+  color: #245ac2;
+}
+
+.secondary:hover {
+  background: #eef3fc;
+}
+
+.error {
+  color: #a51e28;
+}
+
+.success {
+  color: #24683a;
+}
+
+:focus-visible {
+  outline: 3px solid #dd950c;
+  outline-offset: 3px;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}

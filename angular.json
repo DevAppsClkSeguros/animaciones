@@ -29,6 +29,7 @@
             "styles": [
               "src/styles.css"
             ],
+            "allowedCommonJsDependencies": ["crypto-js"],
             "scripts": []
           },
           "configurations": {
@@ -48,6 +49,12 @@
               "outputHashing": "all"
             },
             "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
@@ -92,5 +99,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "0e9c2873-f9ce-41a5-8bf0-872d21d768bb"
   }
 }

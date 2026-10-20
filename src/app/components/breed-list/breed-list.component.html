@@ -1,0 +1,32 @@
+<h1>Lista de razas</h1>
+
+<div class="search">
+  <label for="breed-search">Buscar por nombre</label>
+  <input id="breed-search" type="search" placeholder="Por ejemplo: Labrador"
+    [(ngModel)]="searchTerm" (ngModelChange)="filterBreeds()">
+</div>
+
+<p *ngIf="loading" role="status">Cargando razas...</p>
+
+<div *ngIf="error" role="alert">
+  <p class="error">{{ error }}</p>
+  <button type="button" (click)="loadBreeds()">Reintentar</button>
+</div>
+
+<ng-container *ngIf="!loading && !error">
+  <p role="status">{{ filteredBreeds.length }} razas encontradas.</p>
+  <p *ngIf="filteredBreeds.length === 0">No hay razas que coincidan con tu búsqueda.</p>
+
+  <div class="breed-grid">
+    <article class="breed-card" *ngFor="let breed of filteredBreeds">
+      <img *ngIf="breed.image?.url as imageUrl" [src]="imageUrl" [alt]="breed.name"
+        loading="lazy" (error)="breed.image = undefined">
+      <div class="card-content">
+        <h2>{{ breed.name }}</h2>
+        <p>{{ breed.temperament || 'Temperamento no disponible.' }}</p>
+        <button type="button" (click)="selectBreed(breed)"
+          [attr.aria-label]="'Ver detalle de ' + breed.name">Ver detalle</button>
+      </div>
+    </article>
+  </div>
+</ng-container>

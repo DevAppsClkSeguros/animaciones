@@ -1,0 +1,72 @@
+.search {
+  max-width: 440px;
+  margin-bottom: 24px;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #abb2bc;
+  border-radius: 5px;
+}
+
+.breed-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 20px;
+  animation: fade-in 0.4s ease-out;
+}
+
+.breed-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.breed-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 5px 14px #00000014;
+}
+
+.breed-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 18px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.card-content p {
+  flex: 1;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breed-grid { animation: none; }
+  .breed-card { transition: none; }
+  .breed-card:hover { transform: none; }
+}
